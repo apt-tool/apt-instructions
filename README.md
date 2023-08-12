@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# FTP
+# APT instructions
 
 ![](https://img.shields.io/badge/Language-Golang-blue)
 ![](https://img.shields.io/badge/Version-v0.1-blue)
@@ -13,8 +12,3 @@ in order to manage scripts and logs files from core app.
 - ```HTTP_PORT``` which is the system port
 - ```ACCESS_KEY``` which is used to block download access for files
 - ```PRIVATE_KEY``` which is used to give execute script system call enable only for core
-=======
-# APT instructions
-
-APT instructions component.
->>>>>>> 6f9f6e3beade094d986d6677ec8e60cbad48fe99
