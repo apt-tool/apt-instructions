@@ -3,7 +3,7 @@ package http
 import (
 	"fmt"
 
-	"github.com/automated-pen-testing/instructions/internal/crypto"
+	"github.com/apt-tool/apt-instructions/internal/crypto"
 
 	"github.com/gofiber/fiber/v2"
 )

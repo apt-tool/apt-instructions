@@ -1,7 +1,7 @@
 # APT instructions
 
 ![](https://img.shields.io/badge/Language-Golang-blue)
-![](https://img.shields.io/badge/Version-v0.1-blue)
+![](https://img.shields.io/badge/Version-v0.2-blue)
 
 This is file transfer part of our system. In this app we upload our attack scripts,
 we execute attack scripts, and we download the results. This system provides an interface
