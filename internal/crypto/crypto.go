@@ -18,13 +18,13 @@ func GetMD5Hash(text string) string {
 }
 
 // Encrypt string to base64 crypto using AES.
-func Encrypt(key []byte, text string) string {
+func Encrypt(key []byte, text string) (string, error) {
 	// key := []byte(keyText)
 	plaintext := []byte(text)
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	// The IV needs to be unique, but not secure. Therefore, it's common to
@@ -32,29 +32,29 @@ func Encrypt(key []byte, text string) string {
 	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
 	iv := ciphertext[:aes.BlockSize]
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		panic(err)
+		return "", err
 	}
 
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintext)
 
 	// convert to base64
-	return base64.URLEncoding.EncodeToString(ciphertext)
+	return base64.URLEncoding.EncodeToString(ciphertext), nil
 }
 
 // Decrypt from base64 to decrypted string
-func Decrypt(key []byte, cryptoText string) string {
+func Decrypt(key []byte, cryptoText string) (string, error) {
 	ciphertext, _ := base64.URLEncoding.DecodeString(cryptoText)
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
-	// The IV needs to be unique, but not secure. Therefore it's common to
+	// The IV needs to be unique, but not secure. Therefore, it's common to
 	// include it at the beginning of the ciphertext.
 	if len(ciphertext) < aes.BlockSize {
-		panic("ciphertext too short")
+		return "", err
 	}
 	iv := ciphertext[:aes.BlockSize]
 	ciphertext = ciphertext[aes.BlockSize:]
@@ -64,5 +64,5 @@ func Decrypt(key []byte, cryptoText string) string {
 	// XORKeyStream can work in-place if the two arguments are the same.
 	stream.XORKeyStream(ciphertext, ciphertext)
 
-	return fmt.Sprintf("%s", ciphertext)
+	return fmt.Sprintf("%s", ciphertext), nil
 }
