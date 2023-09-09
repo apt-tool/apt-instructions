@@ -68,11 +68,16 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 
 	path := fmt.Sprintf("./data/attacks/%s.sh", req.Path)
 
+	code := 0
 	cmd, err := exec.Command("/bin/sh", path, req.Param).Output()
 	if err != nil {
-		log.Println(fmt.Errorf("[handler.Execute] failed to get files error=%w", err))
+		if exitError, ok := err.(*exec.ExitError); ok {
+			code = exitError.ExitCode()
+		} else {
+			log.Println(fmt.Errorf("[handler.Execute] failed to get files error=%w", err))
 
-		return fiber.ErrInternalServerError
+			return fiber.ErrInternalServerError
+		}
 	}
 
 	f, err := os.Create(fmt.Sprintf("./data/docs/%d.txt", req.DocumentID))
@@ -82,9 +87,16 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 		return fiber.ErrInternalServerError
 	}
 
-	defer f.Close()
+	defer func(f *os.File) {
+		er := f.Close()
+		if er != nil {
+			log.Println(fmt.Errorf("[handler.Execute] failed to close file error=%w", er))
+		}
+	}(f)
 
 	_, _ = f.Write(cmd)
 
-	return ctx.SendStatus(fiber.StatusOK)
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code": code,
+	})
 }
