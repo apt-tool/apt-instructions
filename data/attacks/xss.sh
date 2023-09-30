@@ -22,4 +22,6 @@ then
   exit 0;
 fi
 
+echo "Secure to XSS!";
+
 exit 1;
