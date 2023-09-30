@@ -19,4 +19,6 @@ do
   echo Got: "$TMP"
 done
 
+echo "System did not block me!";
+
 exit 0;

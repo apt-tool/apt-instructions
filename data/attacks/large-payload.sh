@@ -20,6 +20,14 @@ do
 
   TMP=$(curl -X POST "$HOST")
   echo Got: "$TMP"
+
+  if [ "$TMP" == "HTTP1.1 400*" ]
+  then
+    exit 1;
+  fi
+
 done
+
+echo "We send multiple heavy files to your system!";
 
 exit 0;
