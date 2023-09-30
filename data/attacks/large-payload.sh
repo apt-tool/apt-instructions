@@ -5,7 +5,7 @@
 HOST=$1
 
 # message
-echo "Starting BGP attack ...";
+echo "Starting Large Payload attack ...";
 
 echo "performing at:";
 
