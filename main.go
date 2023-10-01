@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/apt-tool/apt-instructions/internal/http"
+	"github.com/ptaas-tool/ftp-server/internal/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

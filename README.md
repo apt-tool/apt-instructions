@@ -1,4 +1,4 @@
-# APT instructions
+# PTaaS FTP server
 
 ![](https://img.shields.io/badge/language-golang_v1.20-blue)
 ![](https://img.shields.io/badge/version-v0.2.1-green)
@@ -12,7 +12,7 @@ in order to manage scripts and logs files from core app.
 FTP server docker image address:
 
 ```shell
-docker pull amirhossein21/apt-instructions:v0.2.1
+docker pull amirhossein21/ptaas-tool:ftp-v0.2.1
 ```
 
 ## Environment Variables
@@ -28,5 +28,5 @@ Setup ftp server in docker container with following command:
 ```shell
 docker run -d \
   -p 80:80 \
-  amirhossein21/apt-instructions:v0.2.1
+  amirhossein21/ptaas-tool:ftp-v0.2.1
 ```

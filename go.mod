@@ -1,4 +1,4 @@
-module github.com/apt-tool/apt-instructions
+module github.com/ptaas-tool/ftp-server
 
 go 1.20
 
