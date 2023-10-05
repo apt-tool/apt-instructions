@@ -10,6 +10,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func main() {
@@ -29,8 +30,11 @@ func main() {
 		PrivateKey: private,
 	}
 
-	app.Get("/", h.List)
 	app.Get("/health", h.Health)
+	app.Use(logger.New(logger.Config{
+		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+	}))
+	app.Get("/", h.List)
 	app.Get("/download", h.AccessMiddleware, h.Download)
 	app.Post("/upload", h.Upload)
 	app.Post("/execute", h.AuthMiddleware, h.Execute)
