@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -39,12 +40,19 @@ func (c client) Put(name, path string) error {
 	if _, err := c.connection.FPutObject(ctx, c.config.Bucket, name, path, minio.PutObjectOptions{
 		ContentType: "application/text",
 	}); err != nil {
-		return fmt.Errorf("[minio.Client] failed to put object error=%w", err)
+		return fmt.Errorf("[minio.Client.Put] failed to put object error=%w", err)
 	}
 
 	return nil
 }
 
 func (c client) Get(name string) (string, error) {
+	ctx := context.Background()
 
+	url, err := c.connection.PresignedGetObject(ctx, c.config.Bucket, name, 2*time.Hour, nil)
+	if err != nil {
+		return "", fmt.Errorf("[minio.Client.Get] failed to get url error=%w", err)
+	}
+
+	return url.String(), nil
 }
