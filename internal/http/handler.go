@@ -90,7 +90,8 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 		}
 	}
 
-	f, err := os.Create(fmt.Sprintf("./data/docs/%d.txt", req.DocumentID))
+	path = fmt.Sprintf("./data/docs/%d.txt", req.DocumentID)
+	f, err := os.Create(path)
 	if err != nil {
 		log.Println(fmt.Errorf("[handler.Execute] failed to store log file error=%w", err))
 
@@ -105,6 +106,16 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 	}(f)
 
 	_, _ = f.Write(cmd)
+
+	if er := h.MinioClient.Put(fmt.Sprintf("%d.txt", req.DocumentID), path); er != nil {
+		log.Println("[handler.Execute] failed to store file error=%w", err)
+
+		return fiber.ErrInternalServerError
+	}
+
+	if er := os.Remove(path); er != nil {
+		log.Println("[handler.Execute] failed to remove local file error=%w", er)
+	}
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"code": code,
