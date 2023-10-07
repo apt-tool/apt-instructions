@@ -7,12 +7,15 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/ptaas-tool/ftp-server/internal/storage"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 type Handler struct {
-	AccessKey  string
-	PrivateKey string
+	AccessKey   string
+	PrivateKey  string
+	MinioClient storage.Client
 }
 
 func (h Handler) Health(ctx *fiber.Ctx) error {
@@ -22,7 +25,14 @@ func (h Handler) Health(ctx *fiber.Ctx) error {
 func (h Handler) Download(ctx *fiber.Ctx) error {
 	path := ctx.Query("path")
 
-	return ctx.Download(fmt.Sprintf("./data/docs/%s.txt", path), fmt.Sprintf("%s.txt", path))
+	url, err := h.MinioClient.Get(fmt.Sprintf("%s.txt", path))
+	if err != nil {
+		log.Println(fmt.Errorf("[handler.Download] failed to get url error=%w", err))
+
+		return ctx.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return ctx.Status(fiber.StatusOK).SendString(url)
 }
 
 func (h Handler) Upload(ctx *fiber.Ctx) error {
