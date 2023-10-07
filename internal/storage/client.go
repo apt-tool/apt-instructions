@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/minio/minio-go/v7"
@@ -33,7 +34,15 @@ type client struct {
 }
 
 func (c client) Put(name, path string) error {
+	ctx := context.Background()
 
+	if _, err := c.connection.FPutObject(ctx, c.config.Bucket, name, path, minio.PutObjectOptions{
+		ContentType: "application/text",
+	}); err != nil {
+		return fmt.Errorf("[minio.Client] failed to put object error=%w", err)
+	}
+
+	return nil
 }
 
 func (c client) Get(name string) (string, error) {
