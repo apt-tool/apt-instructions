@@ -1,9 +1,9 @@
 # PTaaS FTP server
 
 ![](https://img.shields.io/badge/language-golang_v1.20-blue)
-![](https://img.shields.io/badge/version-v0.2.1-green)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/ptaas-tool/ftp-server)
 
-This is file transfer part of our system. In this app we upload our attack scripts,
+This is file manager component of our system. In this app we upload our attack scripts,
 we execute attack scripts, and we download the results. This system provides an interface
 in order to manage scripts and logs files from core app.
 
@@ -12,10 +12,10 @@ in order to manage scripts and logs files from core app.
 FTP server docker image address:
 
 ```shell
-docker pull amirhossein21/ptaas-tool:ftp-v0.2.1
+docker pull amirhossein21/ptaas-tool:ftp-v0.X.X
 ```
 
-## Environment Variables
+### environment variables
 
 - ```HTTP_PORT``` which is the system port
 - ```ACCESS_KEY``` which is used to block download access for files
@@ -28,6 +28,7 @@ Setup ftp server in docker container with following command:
 
 ```shell
 docker run -d \
+  -e HTTP_PORT=80 \
   -p 80:80 \
-  amirhossein21/ptaas-tool:ftp-v0.2.1
+  amirhossein21/ptaas-tool:ftp-v0.X.X
 ```
