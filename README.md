@@ -20,6 +20,7 @@ docker pull amirhossein21/ptaas-tool:ftp-v0.2.1
 - ```HTTP_PORT``` which is the system port
 - ```ACCESS_KEY``` which is used to block download access for files
 - ```PRIVATE_KEY``` which is used to give execute script system call enable only for core
+- ```MINIO_CLUSTER``` is the minio configs. ```access:secret@endpoint&bucket&true```
 
 ## Setup
 
