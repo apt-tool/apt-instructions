@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/ptaas-tool/ftp-server/internal/http"
+	"github.com/ptaas-tool/ftp-server/internal/storage"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -19,6 +20,12 @@ func main() {
 	private := os.Getenv("PRIVATE_KEY")
 	access := os.Getenv("ACCESS_KEY")
 
+	// get minio configs
+	minioCli, err := storage.New(storage.LoadConfig(os.Getenv("MINIO_CLUSTER")))
+	if err != nil {
+		panic(err)
+	}
+
 	// create new fiber app
 	app := fiber.New()
 
@@ -26,8 +33,9 @@ func main() {
 
 	// create new handler
 	h := http.Handler{
-		AccessKey:  access,
-		PrivateKey: private,
+		AccessKey:   access,
+		PrivateKey:  private,
+		MinioClient: minioCli,
 	}
 
 	app.Get("/health", h.Health)
