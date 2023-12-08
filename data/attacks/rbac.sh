@@ -91,6 +91,8 @@ then
   exit 0;
 fi
 
+sleep 5s;
+
 echo "Secure RBAC."
 
 exit 1;

@@ -15,6 +15,8 @@ date "+%Y/%m/%d %H:%M:%S";
 # create a redirection system
 IP=$(dig +short "$HOST")
 
+sleep 5s;
+
 # bind to listen and redirect
 size=${#IP}
 if [ "$size" -gt 5 ]

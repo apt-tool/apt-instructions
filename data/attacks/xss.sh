@@ -22,6 +22,8 @@ then
   exit 0;
 fi
 
+sleep 5s;
+
 echo "Secure to XSS!";
 
 exit 1;

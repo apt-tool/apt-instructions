@@ -28,6 +28,8 @@ do
 
 done
 
+sleep 5s;
+
 echo "We send multiple heavy files to your system!";
 
 exit 0;

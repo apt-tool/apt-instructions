@@ -19,6 +19,8 @@ do
   echo Got: "$TMP"
 done
 
+sleep 5s;
+
 echo "System did not block me!";
 
 exit 0;
