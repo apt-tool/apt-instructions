@@ -121,6 +121,97 @@ then
   exit 0;
 fi
 
+HOST1="$1/api/register"
+RESP1=$(curl "$HOST1")
+
+echo "$HOST1";
+
+sleep 5s;
+
+if [ "$RESP1" == "HTTP/1.1 200" ] || [ "$RESP1" == "HTTP/1.1 202" ]
+then
+  echo "Got $RESP1";
+  exit 0;
+fi
+
+HOST1="$1/api/login"
+RESP1=$(curl "$HOST1")
+
+echo "$HOST1";
+
+sleep 5s;
+
+if [ "$RESP1" == "HTTP/1.1 200" ] || [ "$RESP1" == "HTTP/1.1 202" ]
+then
+  echo "Got $RESP1";
+  exit 0;
+fi
+
+HOST1="$1/api/users"
+RESP1=$(curl "$HOST1")
+
+echo "$HOST1";
+
+sleep 5s;
+
+if [ "$RESP1" == "HTTP/1.1 200" ] || [ "$RESP1" == "HTTP/1.1 202" ]
+then
+  echo "Got $RESP1";
+  exit 0;
+fi
+
+HOST1="$1/api/users/register"
+RESP1=$(curl "$HOST1")
+
+echo "$HOST1";
+
+sleep 5s;
+
+if [ "$RESP1" == "HTTP/1.1 200" ] || [ "$RESP1" == "HTTP/1.1 202" ]
+then
+  echo "Got $RESP1";
+  exit 0;
+fi
+
+HOST1="$1/api/users/1"
+RESP1=$(curl "$HOST1")
+
+echo "$HOST1";
+
+sleep 5s;
+
+if [ "$RESP1" == "HTTP/1.1 200" ] || [ "$RESP1" == "HTTP/1.1 202" ]
+then
+  echo "Got $RESP1";
+  exit 0;
+fi
+
+HOST1="$1/api/admins"
+RESP1=$(curl "$HOST1")
+
+echo "$HOST1";
+
+sleep 5s;
+
+if [ "$RESP1" == "HTTP/1.1 200" ] || [ "$RESP1" == "HTTP/1.1 202" ]
+then
+  echo "Got $RESP1";
+  exit 0;
+fi
+
+HOST1="$1/auth/users/2"
+RESP1=$(curl "$HOST1")
+
+echo "$HOST1";
+
+sleep 5s;
+
+if [ "$RESP1" == "HTTP/1.1 200" ] || [ "$RESP1" == "HTTP/1.1 202" ]
+then
+  echo "Got $RESP1";
+  exit 0;
+fi
+
 sleep 5s;
 
 echo "Secure on RBAC attack."
