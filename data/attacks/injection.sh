@@ -2,7 +2,7 @@
 
 
 # message
-echo "Starting SQL Injection attack ...";
+echo "Starting Injection attack ...";
 
 echo "performing at:";
 
