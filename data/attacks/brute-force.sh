@@ -15,15 +15,18 @@ date "+%Y/%m/%d %H:%M:%S";
 echo "\n";
 
 # make a loop to perform DoS attack
-for _ in {1..100}
+for _ in {1..1000}
 do
   TMP=$(curl -i -X GET "$HOST")
   echo Got: "$TMP"
 
   if [[ "$TMP" == *"400"* ]]; then
-    echo "System is secure on DoS attack!"
+    echo "System is secure on brute force attack!"
     exit 1;
   fi
+
+  echo "key"
+  LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 100; echo
 
   sleep 1s;
 done

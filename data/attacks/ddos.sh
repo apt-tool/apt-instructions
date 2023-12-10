@@ -30,7 +30,7 @@ do
     exit 1;
   fi
 
-  cat /dev/urandom | tr -dc '[:alpha:]' | fold -w ${1:-20} | head -n 10
+  LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 100; echo
 
   sleep 1s;
 done

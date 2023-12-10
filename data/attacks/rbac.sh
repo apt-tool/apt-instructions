@@ -84,6 +84,9 @@ fi
 
 sleep 5s;
 
+echo "Keygen"
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 100; echo
+
 HOST1="$1/auth/signup"
 RESP1=$(curl "$HOST1")
 
@@ -213,6 +216,10 @@ then
 fi
 
 sleep 5s;
+
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 100; echo
+
+echo "20 valid endpoints checked, some may got failer error."
 
 echo "Secure on RBAC attack."
 

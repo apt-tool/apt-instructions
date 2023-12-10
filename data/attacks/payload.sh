@@ -14,28 +14,37 @@ date "+%Y/%m/%d %H:%M:%S";
 
 echo "\n";
 
-cat /dev/urandom | tr -dc '[:alpha:]' | fold -w ${1:-20} | head -n 1
+echo "Target hash:"
+
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 12; echo
 
 echo "\n";
 
 ls -a;
 
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 1000; echo
+
 ls -la;
 
-cat /dev/urandom | tr -dc '[:alpha:]' | fold -w ${1:-20} | head -n 100
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 100; echo
 
 for _ in {1..10}
 do
   TMP=$(curl -XPOST -T "big-file.iso" "$HOST")
   echo Upload result: "$TMP"
+  echo Batch input ....
 
   if [[ "$TMP" == *"200"* ]]; then
     echo "System is not secure on Payload attack!"
     exit 0;
   fi
 
-  sleep 1s;
+  sleep 15s;
 done
+
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 100; echo
+
+echo "Hash key matched";
 
 sleep 5s;
 
@@ -47,7 +56,7 @@ echo "Response: 500"
 echo "PING http://localhost:9000 (172.0.0.1): 0 data bytes"
 echo "cannot resolve localhost:9000: host not running"
 
-echo ""
+echo "downtime system on host: localhost port: 9000"
 
-echo "System is secure on Payload attack!"
+echo "System is not secure on Payload attack!"
 exit 0;

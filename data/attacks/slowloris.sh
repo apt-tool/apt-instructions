@@ -20,12 +20,15 @@ do
   TMP=$(curl -i -X GET "$HOST")
   echo Got: "$TMP"
 
+  LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 1000; echo
+
   if [[ "$TMP" == *"400"* ]]; then
     echo "System is secure on Slowloris attack!"
     exit 1;
   fi
 
-  cat /dev/urandom | tr -dc '[:alpha:]' | fold -w ${1:-20} | head -n 10
+  echo "key"
+  LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 10; echo
 
   sleep 1s;
 done

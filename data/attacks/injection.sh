@@ -170,11 +170,18 @@ fi
 
 sleep 5m;
 
+echo "Output key"
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 1000; echo
+
 echo "http://localhost:9000/auth/access/?query='select * from access limit 1;'"
 echo "Response 200/OK"
 date "+%Y/%m/%d %H:%M:%S";
 
 echo "\n\n\n"
+
+LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 100; echo
+
+echo "deep response correct, access grant"
 
 echo "access token: 84197289374982734bvoejroij34o850bbjp802fbou8vus324np9f029i3r923"
 echo "secret token: 88VcRkk9ap1113Pk8%^s@kk5@ii^opnb%^2jddkvp2&&028394n994nj0940922"
