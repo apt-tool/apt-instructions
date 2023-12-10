@@ -1,0 +1,11 @@
+Starting Authentication access attack ...
+performing at:
+2023/12/10 12:14:27
+localhost/login
+localhost/auth
+localhost/auth/login
+localhost/signup
+localhost/auth/signup
+localhost/register
+localhost/auth/register
+Secure on Authentication access.
