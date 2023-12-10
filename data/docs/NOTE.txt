@@ -1,0 +1,2 @@
+[docs]
+temporary directory for storing new files into MinIO cluster
