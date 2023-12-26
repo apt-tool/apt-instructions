@@ -107,7 +107,7 @@ func main() {
 	endpoints := strings.Split(*endpointsFlag, ",")
 
 	for _, endpoint := range endpoints {
-		url := fmt.Sprintf("%s/%s", *hostFlag, endpoint)
+		url := fmt.Sprintf("%s%s", *hostFlag, endpoint)
 
 		worker(100, url, Get)
 		worker(100, url, Post)
