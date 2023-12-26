@@ -187,6 +187,40 @@ fragment TypeRef on __Type {
   auth(veterinaryName: "Julien")
   second: auth(veterinaryName:"Benoit")
 }`,
+	`query {
+  users {
+    id
+    name
+    email
+    # You can add more fields as needed
+  }
+}
+`,
+	`query {
+  user(id: "USER_ID") {
+    id
+    name
+    email
+    # Add more fields if needed
+  }
+}
+`,
+	`query {
+  users(filter: { role: "admin" }) {
+    id
+    name
+    email
+  }
+}
+`,
+	`query {
+  users(page: 1, pageSize: 10) {
+    id
+    name
+    email
+  }
+}
+`,
 }
 
 func send(host string, query string) bool {
