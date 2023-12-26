@@ -26,6 +26,11 @@ func main() {
 		panic(err)
 	}
 
+	// create data dir
+	if er := os.MkdirAll("./data/docs/", os.ModePerm); er != nil {
+		log.Println(er)
+	}
+
 	// create new fiber app
 	app := fiber.New()
 
