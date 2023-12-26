@@ -3,17 +3,51 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 	"strings"
 )
 
 type CallBack func(url string) bool
 
-func protocol(url string) bool {
-	return false
-}
-
 func fileSend(url string) bool {
+	largeUrls := []string{
+		"https://speed.hetzner.de/1GB.bin",
+		"https://speedtest-sgp1.digitalocean.com/5gb.test",
+		"https://speed.hetzner.de/10GB.bin",
+	}
+
+	for _, file := range largeUrls {
+		data, err := os.Open(file)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer data.Close()
+
+		req, err := http.NewRequest("PUT", url, data)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		req.Header.Set("Content-Type", "text/plain")
+
+		client := &http.Client{}
+
+		res, err := client.Do(req)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer res.Body.Close()
+
+		if res.StatusCode == 200 {
+			return true
+		}
+	}
+
 	return false
 }
 
@@ -48,7 +82,6 @@ func main() {
 		fileFetch,
 		dirListing,
 		fileSend,
-		protocol,
 	}
 
 	for _, callback := range callbacks {
