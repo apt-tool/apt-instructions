@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -51,19 +52,85 @@ func fileSend(url string) bool {
 	return false
 }
 
+func Get(url string) bool {
+	fmt.Println("GET URL:>", url)
+
+	req, err := http.NewRequest("GET", url, nil)
+
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println(err)
+
+		return false
+	}
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+
+	body, _ := io.ReadAll(resp.Body)
+
+	fmt.Println("response Body:", string(body))
+
+	return resp.StatusCode == http.StatusOK
+}
+
 func dirListing(url string) bool {
+	paths := []string{
+		"a/b",
+		"../a/b",
+		"../a/../b",
+		"a//c",
+		"/",
+		"a/c/.",
+		"/var/",
+		"/etc/",
+		"/dev/",
+		"/usr/",
+		"/lib/",
+		"/proc/",
+		"/Users/",
+		"/System",
+	}
+
+	for _, subPath := range paths {
+		host := fmt.Sprintf("%s/%s", url, subPath)
+
+		if Get(host) {
+			return true
+		}
+	}
+
 	return false
 }
 
 func fileFetch(url string) bool {
-	return false
-}
+	paths := []string{
+		"a/b",
+		"../a/b",
+		"../a/../b",
+		"a//c",
+		"/",
+		"a/c/.",
+		"/var/",
+		"/etc/",
+		"/dev/",
+		"/usr/",
+		"/lib/",
+		"/proc/",
+		"/Users/",
+		"/System",
+	}
 
-func path(url string) bool {
-	return false
-}
+	for _, subPath := range paths {
+		host := fmt.Sprintf("%s/%s", url, subPath)
 
-func headers(url string) bool {
+		if Get(host) {
+			return true
+		}
+	}
+
 	return false
 }
 
@@ -77,8 +144,6 @@ func main() {
 
 	endpoints := strings.Split(*endpointsFlag, ",")
 	callbacks := []CallBack{
-		headers,
-		path,
 		fileFetch,
 		dirListing,
 		fileSend,
