@@ -91,6 +91,40 @@ var credentials = []credential{
 			getMacAddr(),
 		},
 	},
+	{
+		username: "najafizadeh21@gmail.com",
+		passwords: []string{
+			"12345",
+			"",
+			"admin",
+			"root",
+			time.Now().String(),
+			getMacAddr(),
+		},
+	},
+	{
+		username: "amirhossein.najafizadeh@yahoo.com",
+		passwords: []string{
+			"12345",
+			"",
+			"secret",
+			"admin",
+			"root",
+			time.Now().String(),
+			getMacAddr(),
+		},
+	},
+	{
+		username: "najafizadeh21@aut.ac.ir",
+		passwords: []string{
+			"1889A293jhh",
+			"",
+			"admin",
+			"root",
+			time.Now().String(),
+			getMacAddr(),
+		},
+	},
 }
 
 func getMacAddr() string {
