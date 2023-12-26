@@ -39,12 +39,14 @@ func main() {
 	}
 
 	app.Get("/health", h.Health)
+
 	app.Use(logger.New(logger.Config{
 		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
 	}))
+
 	app.Get("/", h.List)
+
 	app.Get("/download", h.AccessMiddleware, h.Download)
-	app.Post("/upload", h.Upload)
 	app.Post("/execute", h.AuthMiddleware, h.Execute)
 
 	if err := app.Listen(fmt.Sprintf(":%d", port)); err != nil {

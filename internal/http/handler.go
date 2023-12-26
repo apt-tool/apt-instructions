@@ -61,10 +61,10 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 
-	path := fmt.Sprintf("./data/attacks/%s.sh", req.Path)
+	path := fmt.Sprintf("./libatks/%s/main.go", req.Path)
 
 	code := 0
-	cmd, err := exec.Command("/bin/sh", path, req.Param).Output()
+	cmd, err := exec.Command("go run", path, req.Param).Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			code = exitError.ExitCode()
@@ -82,13 +82,6 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 
 		return fiber.ErrInternalServerError
 	}
-
-	defer func(f *os.File) {
-		er := f.Close()
-		if er != nil {
-			log.Println(fmt.Errorf("[handler.Execute] failed to close file error=%w", er))
-		}
-	}(f)
 
 	_, _ = f.Write(cmd)
 
