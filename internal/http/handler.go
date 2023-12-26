@@ -44,7 +44,7 @@ func (h Handler) List(ctx *fiber.Ctx) error {
 	list := make([]string, 0)
 
 	for _, e := range entries {
-		if e.Name() != "go.mod" || e.Name() != "go.sum" {
+		if e.Name() != "go.mod" && e.Name() != "go.sum" {
 			list = append(list, e.Name())
 		}
 	}
@@ -62,8 +62,8 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 	}
 
 	path := fmt.Sprintf("./libatks/%s/main.go", req.Path)
-
 	code := 0
+
 	cmd, err := exec.Command("go run", path, req.Param).Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
@@ -76,6 +76,7 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 	}
 
 	newPath := fmt.Sprintf("./data/docs/%d.txt", req.DocumentID)
+
 	f, err := os.Create(newPath)
 	if err != nil {
 		log.Println(fmt.Errorf("[handler.Execute] failed to store log file error=%w", err))
@@ -86,13 +87,13 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 	_, _ = f.Write(cmd)
 
 	if er := h.MinioClient.Put(fmt.Sprintf("%d.txt", req.DocumentID), newPath); er != nil {
-		log.Println("[handler.Execute] failed to store file error=%w", err)
+		log.Println(fmt.Errorf("[handler.Execute] failed to store file error=%w", err))
 
 		return fiber.ErrInternalServerError
 	}
 
 	if er := os.Remove(newPath); er != nil {
-		log.Println("[handler.Execute] failed to remove local file error=%w", er)
+		log.Println(fmt.Errorf("[handler.Execute] failed to remove local file error=%w", er))
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
