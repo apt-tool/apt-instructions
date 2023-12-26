@@ -39,6 +39,7 @@ func main() {
 	}
 
 	app.Get("/health", h.Health)
+	app.Get("/readyz", h.Health)
 
 	app.Use(logger.New(logger.Config{
 		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
@@ -46,10 +47,12 @@ func main() {
 
 	app.Get("/", h.List)
 
-	app.Get("/download", h.AccessMiddleware, h.Download)
-	app.Post("/execute", h.AuthMiddleware, h.Execute)
+	app.Use(h.AuthMiddleware)
 
-	if err := app.Listen(fmt.Sprintf(":%d", port)); err != nil {
-		log.Fatal(fmt.Errorf("failed to start ftp server error=%w", err))
+	app.Post("/execute", h.Execute)
+	app.Get("/download", h.AccessMiddleware, h.Download)
+
+	if er := app.Listen(fmt.Sprintf(":%d", port)); er != nil {
+		log.Fatal(fmt.Errorf("failed to start ftp server error=%w", er))
 	}
 }
