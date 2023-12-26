@@ -2,12 +2,10 @@ package http
 
 import (
 	"fmt"
+	"github.com/ptaas-tool/ftp-server/internal/storage"
 	"log"
 	"os"
 	"os/exec"
-	"strings"
-
-	"github.com/ptaas-tool/ftp-server/internal/storage"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -35,21 +33,8 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).SendString(url)
 }
 
-func (h Handler) Upload(ctx *fiber.Ctx) error {
-	name := ctx.Query("name")
-
-	file, err := ctx.FormFile("script")
-	if err != nil {
-		log.Println(fmt.Errorf("[handler.Upload] failed to get file error=%w", err))
-
-		return fiber.ErrBadRequest
-	}
-
-	return ctx.SaveFile(file, fmt.Sprintf("./data/attacks/%s.sh", name))
-}
-
 func (h Handler) List(ctx *fiber.Ctx) error {
-	entries, err := os.ReadDir("./data/attacks/")
+	entries, err := os.ReadDir("./libatks/")
 	if err != nil {
 		log.Println(fmt.Errorf("[handler.List] failed to get files error=%w", err))
 
@@ -59,8 +44,8 @@ func (h Handler) List(ctx *fiber.Ctx) error {
 	list := make([]string, 0)
 
 	for _, e := range entries {
-		if e.Name() != "NOTE.txt" {
-			list = append(list, strings.Replace(e.Name(), ".sh", "", 1))
+		if e.Name() != "go.mod" || e.Name() != "go.sum" {
+			list = append(list, e.Name())
 		}
 	}
 
