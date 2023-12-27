@@ -146,6 +146,7 @@ func getMacAddr() string {
 
 func sendPostRequest(url string, body []byte) (bool, error) {
 	log.Println("URL:> ", url)
+	log.Println("body:\n\t" + string(body))
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 
@@ -160,12 +161,12 @@ func sendPostRequest(url string, body []byte) (bool, error) {
 
 	defer resp.Body.Close()
 
-	fmt.Println("response Status:", resp.Status)
-	fmt.Println("response Headers:", resp.Header)
+	log.Println("response Status:", resp.Status)
+	log.Println("response Headers:", resp.Header)
 
 	respBody, _ := io.ReadAll(resp.Body)
 
-	fmt.Println("response Body:", string(respBody))
+	log.Println("response Body:", string(respBody))
 
 	return resp.StatusCode >= 200 && resp.StatusCode < 300, nil
 }
