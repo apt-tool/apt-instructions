@@ -61,10 +61,10 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 
-	path := fmt.Sprintf("./libatks/%s/main.go", req.Path)
+	path := fmt.Sprintf("libatks/%s", req.Path)
 	code := 0
 
-	cmd, err := exec.Command("go run", path, req.Param).Output()
+	cmd, err := exec.Command("go", "run", path, "--host", req.Param).Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			code = exitError.ExitCode()

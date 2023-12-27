@@ -178,7 +178,7 @@ func main() {
 	flag.Parse()
 
 	for _, endpoint := range endpoints {
-		url := fmt.Sprintf("%s/%s", *hostFlag, endpoint)
+		url := fmt.Sprintf("%s%s", *hostFlag, endpoint)
 
 		for _, crd := range credentials {
 			for _, pass := range crd.passwords {
