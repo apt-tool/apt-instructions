@@ -64,8 +64,17 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 	path := fmt.Sprintf("libatks/%s/main.go", req.Path)
 	code := 0
 
+	// create params of command
+	params := []string{
+		"run",
+		path,
+	}
+
+	// add input params
+	params = append(params, req.Params...)
+
 	// command to execute your Golang script
-	cmd, err := exec.Command("go", "run", path).Output()
+	cmd, err := exec.Command("go", params...).Output()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
 			code = exitError.ExitCode()

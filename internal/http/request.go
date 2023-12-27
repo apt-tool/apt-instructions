@@ -1,7 +1,7 @@
 package http
 
 type ExecuteRequest struct {
-	Param      string `json:"param"`
-	Path       string `json:"path"`
-	DocumentID uint   `json:"document_id"`
+	Params     []string `json:"params"`
+	Path       string   `json:"path"`
+	DocumentID uint     `json:"document_id"`
 }
