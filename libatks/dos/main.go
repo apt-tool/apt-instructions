@@ -106,12 +106,27 @@ func main() {
 
 	endpoints := strings.Split(*endpointsFlag, ",")
 
+	wg := sync.WaitGroup{}
+
 	for _, endpoint := range endpoints {
 		url := fmt.Sprintf("%s%s", *hostFlag, endpoint)
 
-		worker(100, url, Get)
-		worker(100, url, Post)
+		wg.Add(2)
+
+		go func() {
+			worker(1000, url, Get)
+			wg.Done()
+		}()
+
+		go func() {
+			worker(1000, url, Post)
+			wg.Done()
+		}()
+
+		wg.Wait()
 	}
+
+	log.Println("safe against dos attack!")
 
 	os.Exit(0)
 }

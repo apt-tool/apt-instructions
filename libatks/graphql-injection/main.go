@@ -11,6 +11,14 @@ import (
 )
 
 var queries = []string{
+	`query {
+  users(filter: { role: "admin" }) {
+    id
+    name
+    email
+  }
+}
+`,
 	`query IntrospectionQuery {
   __schema {
     queryType {
@@ -114,6 +122,14 @@ fragment TypeRef on __Type {
     }
   }
 }`,
+	`query {
+  users(filter: { role: "admin" }) {
+    id
+    name
+    email
+  }
+}
+`,
 	`query sqli {
   dogs(namePrefix: "ab%' UNION ALL SELECT 50 AS ID, C.CFGVALUE AS NAME, NULL AS VETERINARY_ID FROM CONFIG C LIMIT ? -- ", limit: 1000) {
     id
@@ -184,6 +200,14 @@ fragment TypeRef on __Type {
   }
 }`,
 	`query {
+  users(filter: { role: "admin" }) {
+    id
+    name
+    email
+  }
+}
+`,
+	`query {
   auth(veterinaryName: "Julien")
   second: auth(veterinaryName:"Benoit")
 }`,
@@ -253,9 +277,13 @@ func main() {
 
 	for _, query := range queries {
 		if send(*hostFlag, query) {
+			log.Println("Query executed in GraphQL injection attack!")
+
 			os.Exit(1)
 		}
 	}
+
+	log.Println("safe against GraphQL injection attacks!")
 
 	os.Exit(0)
 }

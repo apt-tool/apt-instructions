@@ -232,10 +232,14 @@ func main() {
 			url := fmt.Sprintf("%s%s", *hostFlag, endpoint)
 
 			if callback(url) {
+				log.Println("Found a bug in error-handling attack!")
+
 				os.Exit(1)
 			}
 		}
 	}
+
+	log.Println("safe against error-handling attacks!")
 
 	os.Exit(0)
 }

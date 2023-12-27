@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -54,13 +55,25 @@ func main() {
 
 	flag.Parse()
 
+	wg := sync.WaitGroup{}
+
 	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+
 		go func() {
 			if dial(*hostFlag) {
+				log.Println("slowloris attack succeed, service is out of control")
+
 				os.Exit(1)
 			}
+
+			wg.Done()
 		}()
 	}
+
+	wg.Wait()
+
+	log.Println("safe against slowloris attack!")
 
 	os.Exit(0)
 }

