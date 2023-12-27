@@ -61,18 +61,50 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 
-	path := fmt.Sprintf("libatks/%s", req.Path)
+	path := fmt.Sprintf("libatks/%s/main.go", req.Path)
 	code := 0
 
-	cmd, err := exec.Command("go", "run", path, "--host", req.Param).Output()
+	// command to execute your Golang script
+	cmd := exec.Command("go", "run", path)
+
+	// redirect output
+	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		if exitError, ok := err.(*exec.ExitError); ok {
-			code = exitError.ExitCode()
-		} else {
-			log.Println(fmt.Errorf("[handler.Execute] failed to get files error=%w", err))
+		log.Println(fmt.Errorf("[handler.Execute] error creating StdoutPipe error=%w", err))
+
+		return fiber.ErrInternalServerError
+	}
+
+	// start the command
+	if err := cmd.Start(); err != nil {
+		log.Println(fmt.Errorf("[handler.Execute] Error starting command error=%w", err))
+
+		return fiber.ErrInternalServerError
+	}
+
+	// read the output
+	output := make([]byte, 0)
+	buf := make([]byte, 1024)
+	for {
+		n, err := stdout.Read(buf)
+		if err != nil {
+			break
+		}
+
+		output = append(output, buf[:n]...)
+	}
+
+	// wait for command to finish
+	if err := cmd.Wait(); err != nil {
+		exitError, ok := err.(*exec.ExitError)
+		if !ok {
+			log.Println(fmt.Errorf("[handler.Execute] command execution error=%w", err))
 
 			return fiber.ErrInternalServerError
 		}
+
+		// get the exit code
+		code = exitError.ExitCode()
 	}
 
 	newPath := fmt.Sprintf("./data/docs/%d.txt", req.DocumentID)
@@ -84,7 +116,7 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 		return fiber.ErrInternalServerError
 	}
 
-	_, _ = f.Write(cmd)
+	_, _ = f.Write(output)
 
 	if er := h.MinioClient.Put(fmt.Sprintf("%d.txt", req.DocumentID), newPath); er != nil {
 		log.Println(fmt.Errorf("[handler.Execute] failed to store file error=%w", err))

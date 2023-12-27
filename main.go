@@ -52,9 +52,7 @@ func main() {
 
 	app.Get("/", h.List)
 
-	app.Use(h.AuthMiddleware)
-
-	app.Post("/execute", h.Execute)
+	app.Post("/execute", h.AuthMiddleware, h.Execute)
 	app.Get("/download", h.AccessMiddleware, h.Download)
 
 	if er := app.Listen(fmt.Sprintf(":%d", port)); er != nil {
