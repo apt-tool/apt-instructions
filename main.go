@@ -31,6 +31,16 @@ func main() {
 		log.Println(er)
 	}
 
+	// change go.mod address
+	dir := "./"
+	if dir, err = os.Getwd(); err != nil {
+		log.Println(fmt.Errorf("failed to get PWD error=%w", err))
+	}
+	// update env
+	if er := os.Setenv("GOMOD", fmt.Sprintf("%s/libatks/go.mod", dir)); er != nil {
+		panic(er)
+	}
+
 	// create new fiber app
 	app := fiber.New()
 
