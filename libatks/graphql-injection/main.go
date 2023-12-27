@@ -269,6 +269,8 @@ func send(host string, query string) bool {
 }
 
 func main() {
+	log.SetOutput(os.Stdout)
+
 	var (
 		hostFlag = flag.String("host", "localhost", "target host address")
 	)

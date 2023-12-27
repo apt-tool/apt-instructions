@@ -172,6 +172,8 @@ func sendPostRequest(url string, body []byte) (bool, error) {
 }
 
 func main() {
+	log.SetOutput(os.Stdout)
+
 	var (
 		hostFlag = flag.String("host", "localhost", "target host address")
 	)
@@ -200,8 +202,6 @@ func main() {
 			}
 		}
 	}
-
-	log.SetOutput(os.Stdout)
 
 	log.Println("safe against authentication attack!")
 

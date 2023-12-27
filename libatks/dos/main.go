@@ -15,7 +15,7 @@ import (
 type CallBack func(url string) bool
 
 func Post(url string) bool {
-	fmt.Println("POST URL:>", url)
+	log.Println("POST URL:>", url)
 
 	var jsonStr = []byte(`{"title":"Buy cheese and bread for breakfast."}`)
 
@@ -33,18 +33,18 @@ func Post(url string) bool {
 		return false
 	}
 
-	fmt.Println("response Status:", resp.Status)
-	fmt.Println("response Headers:", resp.Header)
+	log.Println("response Status:", resp.Status)
+	log.Println("response Headers:", resp.Header)
 
 	body, _ := io.ReadAll(resp.Body)
 
-	fmt.Println("response Body:", string(body))
+	log.Println("response Body:", string(body))
 
 	return resp.StatusCode == http.StatusServiceUnavailable
 }
 
 func Get(url string) bool {
-	fmt.Println("GET URL:>", url)
+	log.Println("GET URL:>", url)
 
 	req, err := http.NewRequest("GET", url, nil)
 
@@ -57,12 +57,12 @@ func Get(url string) bool {
 		return false
 	}
 
-	fmt.Println("response Status:", resp.Status)
-	fmt.Println("response Headers:", resp.Header)
+	log.Println("response Status:", resp.Status)
+	log.Println("response Headers:", resp.Header)
 
 	body, _ := io.ReadAll(resp.Body)
 
-	fmt.Println("response Body:", string(body))
+	log.Println("response Body:", string(body))
 
 	return resp.StatusCode == http.StatusServiceUnavailable
 }
@@ -97,6 +97,8 @@ func worker(input int, url string, cb CallBack) {
 }
 
 func main() {
+	log.SetOutput(os.Stdout)
+
 	var (
 		hostFlag      = flag.String("host", "localhost", "target host address")
 		endpointsFlag = flag.String("endpoints", "/", "target pathes")
