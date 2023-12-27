@@ -76,6 +76,8 @@ func (h Handler) Execute(ctx *fiber.Ctx) error {
 		}
 	}
 
+	log.Println(fmt.Sprintf("read %d bytes", len(cmd)))
+
 	newPath := fmt.Sprintf("./data/docs/%d.txt", req.DocumentID)
 
 	f, err := os.Create(newPath)

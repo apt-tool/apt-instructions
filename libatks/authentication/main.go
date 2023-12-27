@@ -201,6 +201,8 @@ func main() {
 		}
 	}
 
+	log.SetOutput(os.Stdout)
+
 	log.Println("safe against authentication attack!")
 
 	os.Exit(0)
