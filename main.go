@@ -41,6 +41,8 @@ func main() {
 		panic(er)
 	}
 
+	log.Println(fmt.Sprintf("GOMOD=%s", os.Getenv("GOMOD")))
+
 	// create new fiber app
 	app := fiber.New()
 
