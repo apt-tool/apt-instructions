@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
-	"net"
+	"net/http"
 	"os"
 	"strings"
 	"sync"
@@ -11,42 +13,48 @@ import (
 )
 
 func dial(host string) bool {
-	conn, err := net.Dial("tcp", host)
+	tr := &http.Transport{
+		DisableKeepAlives: false, // ensure persistent connections
+	}
+
+	client := &http.Client{
+		Transport: tr,
+	}
+
+	req, err := http.NewRequest("GET", host, nil)
 	if err != nil {
-		log.Println("error connecting:", err)
+		log.Println("error creating request:", err)
 
-		return true
+		return false
 	}
 
-	defer conn.Close()
+	// make the request
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("error making request:", err)
 
-	log.Println("Connected to host!")
+		return false
+	}
 
+	defer resp.Body.Close()
+
+	// read the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("error reading response:", err)
+
+		return false
+	}
+
+	// print the response
+	fmt.Println("Response Status:", resp.Status)
+	fmt.Println("Response Body:", string(body))
+
+	// keep the connection open by sleeping (for demonstration purposes)
+	// you may handle this differently in your actual use case
 	for {
-		_, err = conn.Write([]byte("Hello, server!"))
-		if err != nil {
-			log.Println("error writing to connection:", err)
-
-			break
-		}
-
-		ticker := time.NewTicker(1 * time.Second) // Change the interval as needed
-		defer ticker.Stop()
-
-		for range ticker.C {
-			// send ping message
-			_, er := conn.Write([]byte("Ping\n"))
-			if er != nil {
-				log.Println("Error writing to connection:", er)
-
-				return true
-			}
-
-			log.Println("Ping sent to server")
-		}
+		time.Sleep(10 * time.Second)
 	}
-
-	return false
 }
 
 func main() {
