@@ -101,12 +101,25 @@ func main() {
 
 	var (
 		hostFlag      = flag.String("host", "localhost", "target host address")
-		endpointsFlag = flag.String("endpoints", "/", "target pathes")
+		endpointsFlag = flag.String("endpoints", "/", "target specific endpoints")
+		paramsFlag    = flag.String("params", "", "system parameters for testing")
 	)
 
 	flag.Parse()
 
 	endpoints := strings.Split(*endpointsFlag, ",")
+	paramSet := strings.Split(*paramsFlag, "&")
+
+	params := make(map[string]string)
+
+	for _, item := range paramSet {
+		parts := strings.Split(item, "=")
+		params[parts[0]] = parts[1]
+	}
+
+	log.Println(hostFlag)
+	log.Println(endpoints)
+	log.Println(params)
 
 	wg := sync.WaitGroup{}
 

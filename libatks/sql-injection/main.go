@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func scan(url string) bool {
@@ -185,10 +186,26 @@ func main() {
 	log.SetOutput(os.Stdout)
 
 	var (
-		hostFlag = flag.String("host", "localhost", "target host address")
+		hostFlag      = flag.String("host", "localhost", "target host address")
+		endpointsFlag = flag.String("endpoints", "/", "target specific endpoints")
+		paramsFlag    = flag.String("params", "", "system parameters for testing")
 	)
 
 	flag.Parse()
+
+	endpoints := strings.Split(*endpointsFlag, ",")
+	paramSet := strings.Split(*paramsFlag, "&")
+
+	params := make(map[string]string)
+
+	for _, item := range paramSet {
+		parts := strings.Split(item, "=")
+		params[parts[0]] = parts[1]
+	}
+
+	log.Println(hostFlag)
+	log.Println(endpoints)
+	log.Println(params)
 
 	if scan(*hostFlag) {
 		log.Println("not safe against sql-injection attacks!")
