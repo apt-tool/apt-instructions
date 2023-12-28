@@ -193,7 +193,7 @@ func main() {
 		params[parts[0]] = parts[1]
 	}
 
-	log.Println(hostFlag)
+	log.Println(*hostFlag)
 	log.Println(sysEndpoints)
 	log.Println(params)
 
