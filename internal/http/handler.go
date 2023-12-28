@@ -2,10 +2,12 @@ package http
 
 import (
 	"fmt"
-	"github.com/ptaas-tool/ftp-server/internal/storage"
 	"log"
 	"os"
 	"os/exec"
+	"strings"
+
+	"github.com/ptaas-tool/ftp-server/internal/storage"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -44,9 +46,20 @@ func (h Handler) List(ctx *fiber.Ctx) error {
 	list := make([]string, 0)
 
 	for _, e := range entries {
-		if e.Name() != "go.mod" && e.Name() != "go.sum" {
-			list = append(list, e.Name())
+		name := e.Name()
+
+		// skip module files
+		if name == "go.mod" || name == "go.sum" {
+			continue
 		}
+
+		// skip draft attacks
+		parts := strings.Split(name, "-")
+		if parts[len(parts)-1] == "draft" {
+			continue
+		}
+
+		list = append(list, e.Name())
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(list)
