@@ -32,3 +32,35 @@ docker run -d \
   -p 80:80 \
   amirhossein21/ptaas-tool:ftp-v0.X.X
 ```
+
+## libatks
+
+Put your new attacks in libatks directory. If you add ```draf``` at the end, it will be ignored.
+Make sure to have only one ```main.go``` file for your attack with the following code in the beginning of
+the ```main``` function.
+
+```go
+log.SetOutput(os.Stdout)
+
+var (
+  hostFlag      = flag.String("host", "localhost", "target host address")
+  endpointsFlag = flag.String("endpoints", "/", "target specific endpoints")
+  paramsFlag    = flag.String("params", "", "system parameters for testing")
+)
+
+flag.Parse()
+
+endpoints := strings.Split(*endpointsFlag, ",")
+paramSet := strings.Split(*paramsFlag, "&")
+
+params := make(map[string]string)
+
+for _, item := range paramSet {
+  parts := strings.Split(item, "=")
+  params[parts[0]] = parts[1]
+}
+
+log.Println(*hostFlag)
+log.Println(endpoints)
+log.Println(params)
+```
