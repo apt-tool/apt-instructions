@@ -23,6 +23,15 @@ func New(cfg Config) (Client, error) {
 		return nil, fmt.Errorf("failed to connect to Minio error=%w", err)
 	}
 
+	ctx := context.Background()
+	if flag, err := conn.BucketExists(ctx, cfg.Bucket); err != nil {
+		return nil, fmt.Errorf("failed to get bucket status=%w", err)
+	} else if !flag {
+		if er := conn.MakeBucket(ctx, cfg.Bucket, minio.MakeBucketOptions{}); er != nil {
+			return nil, fmt.Errorf("failed to create bucket=%w", er)
+		}
+	}
+
 	return client{
 		config:     cfg,
 		connection: conn,
