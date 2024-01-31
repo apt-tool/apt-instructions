@@ -216,7 +216,7 @@ func main() {
 
 	var (
 		hostFlag      = flag.String("host", "localhost", "target host address")
-		endpointsFlag = flag.String("endpoints", "/", "target specific endpoints")
+		endpointsFlag = flag.String("endpoints", "/database/list/2", "target specific endpoints")
 		paramsFlag    = flag.String("params", "", "system parameters for testing")
 	)
 
